@@ -5,6 +5,8 @@ from IPython.display import clear_output # type: ignore
 visitedRoom = {'visitedBedroom' : False, 'visitedServantsQuarters' : False, 'visitedLawn' : False, 'visitedBathroom' : False, 'inJudgementCall' : False}
 seenChecks = {'seenRichGuy' : False, 'seenButler' : False, 'seenFemaleServant' : False, 'seenKid' : False, 'seenMaleServant' : False, 'seenEnbyServant' : False}
 chapterNum = 0
+detectivePath = "Unknown"
+resiliencePath = "Unknown"
 
 # List of characters
 # 0 - RichGuy
@@ -86,39 +88,101 @@ def game():
         type_effect('There are a couple of balconies but they\'ve been locked', newline = False)
         type_effect('...', 0.7, False)
         type_effect(' since the incident with Mr. ' + split_char_list[0][1] + '\'s wife, and there are no plans to open them. You will be chauffeured by the staff while you\'re here, they\'ll lock up after you. You\'re free to conduct your investigation now. We thank you for your service.')
-        choice = get_choice('(type \'y\' to move to Chapter '+ str(chapterNum+1) +')')
+        choice = get_choice('Make your choice: (type \'y\' to move to Chapter '+ str(chapterNum+1) +')')
         clear_output()
         type_effect("Switch rooms:\n1. Living Room[Judgement Call]\n2. Bedroom[Fishy Business]\n3. Servants' Quarter[The Reds]\n4. Lawn[A Breathe of Fresh Air]\n5. Bathroom[The Walls Have Ears]")
-        choice = get_choice('(type \'judge\' or \'fish\' or \'red\' or \'air\' or \'wall\':)')
+        choice = get_choice('Make your choice: (type \'judge\' or \'fish\' or \'red\' or \'air\' or \'wall\':)')
         if choice == 'judge':
             type_effect('There\'s no going back. Are you sure you\'ve made a decision and have someone to accuse?')
-            choice = get_choice('(type \'y\' to confirm, \'n\' to go back:)')
+            choice = get_choice('Make your choice: (type \'y\' to confirm, \'n\' to go back:)')
             if choice == 'n':
-                choice = get_choice('(type \'judge\' or \'fish\' or \'red\' or \'air\' or \'wall\':)')
+                choice = get_choice('Make your choice: (type \'judge\' or \'fish\' or \'red\' or \'air\' or \'wall\':)')
             else:
                 livingroom2()
+
         if choice == 'judge':
             livingroom2()
+            return
         if choice == 'fish':
             bedroom()
+            return
         if choice == 'red':
             quarter()
+            return
         if choice == 'air':
             lawn()
+            return
         if choice == 'wall':
             bathroom()
+            return
         
 
             
     def lawn():
+        global chapterNum
+        chapterNum += 1
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
             type_effect("Chapter 2: A Breathe Of Fresh Air")
-            global chapterNum
-            chapterNum += 2
-        type_effect("")
+            visitedRoom['visitedLawn'] = True
+            chapterNum += 1
+        type_effect("You head out to the lawn with " + split_char_list[6][0] + ". There's neatly cut grass. Except for a couple of patches around the corners. Someone did a pretty lazy job. The maid " + split_char_list[2][0] + " and her kid join you soon enough.")
+
+       
+        type_effect(split_char_list[2][0] + ": \"Mr. " + split_char_list[0][1] + " ")
+        if visitedRoom['visitedBedroom'] == True:
+            type_effect('never really ')
+            global detectivePath
+            detectivePath = char_list[2]
+        type_effect("had a thing for this place. We had to take care of it as an ode to Mrs. " + split_char_list[0][1] + ". " + split_char_list[3][0] + ", this young man, and I keep things going around here.\"")
+        choice = get_choice('Make your choice:\n1. Felt that way about the lawn, you say?\n2. Fair enough. What\'s with the kid looking weird at us?\n3. I\'ll keep that in mind.\n (type \'assess\', \'doubt\', or \'accept)\'', partnerThoughts = split_char_list[6][0] + ': \"The butler\'s voice break seemed to say more than he did.\"')
+        if choice == 'assess':
+            stat_cloud['risk'] += 1
+            type_effect(split_char_list[2][0] + ': \"Yes, -\" Her eyes shift around. \"Would you like to take a look around?\"')
+            choice = get_choice('Make your choice:(type \'y\' or \'n\')', partnerThoughts = split_char_list[6][0] + ': \"Doubt there\'s much else we need to know. I say we call her out.\"')
+            if choice == 'y':
+                stat_cloud['exploration'] += 1
+                if visitedRoom['visitedBedroom'] == True:
+                    type_effect('You look around. There\'s nothing significant wrong with the place. It\'s cold. You decide to head back inside.')
+                else:
+                    type_effect('You look around. The wind howls in your ears. There\'s something shining in a patch of glass. A gleam of red dripping down. You\'ve found the knife used to kill ' + char_list[0])
+                    global resiliencePath
+                    resiliencePath = char_list[2]
+            type_effect(split_char_list[6][0] + ' nods slightly and turns to you.\n' + split_char_list[6][0] + ': \"Let\'s check with the butler now. What was his name again? Ah, ' + split_char_list[1][0] + '.\"')
+        elif choice == 'doubt':
+            stat_cloud['exploration'] += 1
+            type_effect(split_char_list[3][0] + ': \"You got a problem with that pig!?\" That was a scowl if you\'d ever heard one.')
+            type_effect(split_char_list[6][0] + ': \"We... aren\'t exactly cops buddy.\"' + sidekickPronouns1 + ' turns to you,  \"We should head somewhere else.\"')
+        elif choice == 'accept':
+            type_effect('You nod and they leave.')
+        else:
+            type_effect('They leave.')
+        type_effect(split_char_list[6][0] + ': Where to next?')
+        type_effect("Switch rooms:\n1. Living Room[Judgement Call]\n2. Bedroom\n3. Servants' Quarter\n4. Lawn\n5. Bathroom")
+        if detectivePath == char_list[2]:
+            partnerThoughtsInp = split_char_list[6][0] + ': I don\'t believe what we search after this matters too much.'
+        else:
+            partnerThoughtsInp = split_char_list[6][0] + ': Let\'s see what lies ahead.'
+        choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'lawn\' or \'bathroom\':)', partnerThoughtsInp)
+        if choice == 'judge':
+            livingroom2()
+            return
+        if choice == 'fish':
+            bedroom()
+            return
+        if choice == 'red':
+            quarter()
+            return
+        if choice == 'air':
+            lawn()
+            return
+        if choice == 'wall':
+            bathroom()
+            return
+
+
     def quarter():
         clear_output()
         stat_cloud['exploration'] += 1
@@ -144,7 +208,7 @@ def game():
             global chapterNum
             chapterNum += 2
     def livingroom2():
-        clear_output
+        clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
     livingroom1()

@@ -68,7 +68,7 @@ last_names = [
 def set_names():
     richguy_firstname = random.choice(male_names)
     richguy_lastname = random.choice(last_names)
-    butler_firstname = random.choice(male_names)
+    butler_firstname = random.choice(indian_male_names)
     butler_lastname = random.choice(last_names)
     female_servant_firstname = random.choice(female_names)
     female_servant_lastname = random.choice(last_names)
