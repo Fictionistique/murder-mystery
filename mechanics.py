@@ -8,7 +8,7 @@ stat_cloud = {
     'lucky': 0
 }
 #delay = 0.039
-def type_effect(text, delay=0.0, newline=True):
+def type_effect(text, delay=0.039, newline=True):
     for char in text:
         print(char, end='', flush=True)
         sleep(delay)
