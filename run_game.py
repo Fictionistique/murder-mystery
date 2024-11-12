@@ -1,4 +1,4 @@
 import rooms as r
-from mechanics import type_effect,get_choice,guide
+from mechanics import guide
 guide()
 r.game()

@@ -1,4 +1,6 @@
 from time import sleep
+from IPython.display import clear_output # type: ignore
+import characters_randomizer
 
 stat_cloud = {
     'risk': 0,

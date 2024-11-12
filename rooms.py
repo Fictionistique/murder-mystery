@@ -1,12 +1,11 @@
-import characters_randomizer
 from mechanics import *
-from IPython.display import clear_output # type: ignore
 
 visitedRoom = {'visitedBedroom' : False, 'visitedServantsQuarters' : False, 'visitedLawn' : False, 'visitedBathroom' : False, 'inJudgementCall' : False}
 seenChecks = {'seenRichGuy' : False, 'seenButler' : False, 'seenFemaleServant' : False, 'seenKid' : False, 'seenMaleServant' : False, 'seenEnbyServant' : False}
 chapterNum = 0
 detectivePath = "Unknown"
 resiliencePath = "Unknown"
+murderWeapon = []
 
 # List of characters
 # 0 - RichGuy
@@ -43,7 +42,7 @@ def game():
         global chapterNum
         chapterNum = 0
         chapterNum += 1
-        type_effect('Chapter ' + str(chapterNum) + ': Welcome to the life of Private Detective', newline = False)
+        type_effect('Chapter ' + str(chapterNum) + ': Welcome to the life of Private Detective ', newline = False)
         yName = get_choice('', partnerThoughts = f"{split_char_list[6][0]}: \"I\'d say John sounds good enough?\"")
         
         type_effect('The day was cold as it could be when you reached ' + char_list[0] + '\'s estate. A layer of fog covered the ground. His property looked just like you expected. Gothic architecture, well maintained, and', newline = False)
@@ -131,9 +130,9 @@ def game():
         type_effect("You head out to the lawn with " + split_char_list[6][0] + ". There's neatly cut grass. Except for a couple of patches around the corners. Someone did a pretty lazy job. The maid " + split_char_list[2][0] + " and her kid join you soon enough.")
 
        
-        type_effect(split_char_list[2][0] + ": \"Mr. " + split_char_list[0][1] + " ")
+        type_effect(split_char_list[2][0] + ": \"Mr. " + split_char_list[0][1] + " ", newline = False)
         if visitedRoom['visitedBedroom'] == True:
-            type_effect('never really ')
+            type_effect('never really ', newline = False)
             global detectivePath
             detectivePath = char_list[2]
         type_effect("had a thing for this place. We had to take care of it as an ode to Mrs. " + split_char_list[0][1] + ". " + split_char_list[3][0] + ", this young man, and I keep things going around here.\"")
@@ -150,11 +149,10 @@ def game():
                     type_effect('You look around. The wind howls in your ears. There\'s something shining in a patch of glass. A gleam of red dripping down. You\'ve found the knife used to kill ' + char_list[0])
                     global resiliencePath
                     resiliencePath = char_list[2]
-            type_effect(split_char_list[6][0] + ' nods slightly and turns to you.\n' + split_char_list[6][0] + ': \"Let\'s check with the butler now. What was his name again? Ah, ' + split_char_list[1][0] + '.\"')
         elif choice == 'doubt':
             stat_cloud['exploration'] += 1
             type_effect(split_char_list[3][0] + ': \"You got a problem with that pig!?\" That was a scowl if you\'d ever heard one.')
-            type_effect(split_char_list[6][0] + ': \"We... aren\'t exactly cops buddy.\" ' + sidekickPronouns1 + ' turns')
+            type_effect(split_char_list[6][0] + ': \"We... aren\'t exactly cops buddy.\" ' + sidekickPronouns1.capitalize() + ' turns')
             if char_list[7] == 2:
                 print("\b")
             type_effect(' to you,  \"We should head somewhere else.\"')
@@ -220,7 +218,7 @@ def game():
         type_effect('You enter the bath. It\'s tiled with shiny white marble. Clean as a cloud. Tall ceiling and a hanging chandelier. And a waist high mirror from where ' + split_char_list[4][0] + ' looked into your eyes. He\'s got his back towards you. His hands crushing something between them. He turns around. Empties his hands between his teeth and lower lips and walks to the exit.')
         if choice == 'believe':
             type_effect('\nExploration +1', newline = False)
-            type_effect(': Idiot Within Me\n', 0.7)
+            type_effect(': Idiot Within Me\n', 0.35)
             type_effect('You stand there. Embarrassed at your ignorance. It\'s hard to make a bigger fool of ourselves.')
         type_effect(split_char_list[6][0] + ': \"Not much seems off here. Shall we move on or do you want to hang around a while?\"')
         global resiliencePath
@@ -241,10 +239,15 @@ def game():
                 lawn()
                 return
         elif choice == 'wait':
-            type_effect('You hear some hush voices coming from near the window looking out to the lawn. ' + split_char_list[4][0] + ' seems to be distracted, standing near the door and lost in his own world. You move closer to the window. It sounds like the maid\'s kid is talking to her.\n' + split_char_list[3][0] + ': \"You don\'t have to worry mom. They\'re never tracing it back to ' + split_char_list[5][0] + '. I doubt they have half a mind to even look at the place I\'ve shoved it away to.\"\n' + split_char_list[2][0] + ': \"It\'s not exactly them that I\'m worried about. It\'s you.\"')
-            resiliencePath = char_list[3]
-            global detectivePath
-            detectivePath = char_list[5]
+            type_effect('You hear some hush voices coming from near the window looking out to the lawn. ' + split_char_list[4][0] + ' seems to be distracted, standing near the door and lost in his own world. You move closer to the window. It sounds like the maid\'s kid is talking to her.\n' + split_char_list[3][0] + ': \"You don\'t have to worry mom. They\'re never tracing it back to ' + split_char_list[5][0] + '.', newline = False)
+            if visitedRoom['visitedLawn'] == False:
+                type_effect('. I doubt they have half a mind to even look at the place I\'ve shoved it away to.\"')
+            type_effect(split_char_list[2][0] + ': \"It\'s not exactly them that I\'m worried about. It\'s you.\"')
+            if visitedRoom['visitedLawn'] == True:
+                resiliencePath = char_list[3]
+                global detectivePath
+                detectivePath = char_list[5]
+            
             choice = get_choice('Make your choice:(type \'accuse\' or \'explore\')')
             if choice == 'accuse':
                 livingroom2()
@@ -282,9 +285,12 @@ def game():
     
     def livingroom2():
         global chapterNum
+        global resiliencePath
+        global detectivePath
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
         type_effect("Chapter " + str(chapterNum) + ": Judgement Call")
         visitedRoom['inJudgementCall'] = True
+
     livingroom1()
