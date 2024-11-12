@@ -11,5 +11,5 @@ A python based murder mystery that changes according to the player's choices. Fo
 
 ## Demo
 
-![demo](untitled.gif)
+![demo](Untitled.gif)
 
