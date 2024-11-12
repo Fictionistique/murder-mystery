@@ -6,7 +6,6 @@ visitedRoom = {'visitedBedroom' : False, 'visitedServantsQuarters' : False, 'vis
 seenChecks = {'seenRichGuy' : False, 'seenButler' : False, 'seenFemaleServant' : False, 'seenKid' : False, 'seenMaleServant' : False, 'seenEnbyServant' : False}
 chapterNum = 0
 
-questioned = False
 # List of characters
 # 0 - RichGuy
 # 1 - Butler
@@ -40,6 +39,7 @@ split_char_list = [name.split() for name in char_list[:7]]
 def game():
     def livingroom1():
         global chapterNum
+        chapterNum = 0
         chapterNum += 1
         type_effect('Chapter ' + str(chapterNum) + ': Welcome to the life of Private Detective', newline = False)
         yName = get_choice('', partnerThoughts = f"{split_char_list[6][0]}: \"I\'d say John sounds good enough?\"")
@@ -63,7 +63,7 @@ def game():
             seenChecks['seenEnbyServant'] = True
             type_effect(split_char_list[6][0] + " signals both of them over.\n" + split_char_list[6][0] + ": \"Fine evening we're having folks, right?", newline = False)
             sleep(2)
-            type_effect(' Ugh nevermind. I can\'t play coy.'+ split_char_list[4][0] + '\'s wearing raggedy clothes. His breath clearly molded by betel and tobacco. He doesn\'t fit this place.' + ' \"Why\'re your names not on any records?\"')
+            type_effect(' Ugh nevermind. I can\'t play coy.\" '+ split_char_list[4][0] + '\'s wearing raggedy clothes. His breath clearly molded by betel and tobacco. He doesn\'t fit this place.' + ' \"Why\'re your names not on any records?\"')
             type_effect(split_char_list[4][0] + ': \"Illegal immigrants.\" He just shrugged.')
             choice = get_choice('Make your choice:\n1. Seems like ' + char_list[0] + ' was quite accepting of you guys. [Risk: 1]\n2. Fair enough. Why did '+ split_char_list[0][0] +' keep you guys around? [Exploration: 1]\n3. I\'ll keep that in mind. [No change]\n (type \'assess\', \'doubt\', or \'accept)\'', partnerThoughts = split_char_list[6][0] + ': \"Not much here. Old guy just liked \'em.\"')
             if choice == 'assess':
@@ -80,13 +80,71 @@ def game():
         
         type_effect('Butler: \"The murder took place two days ago, or yesterday during the night. ' + split_char_list[2][0]+ ', the maid found Mr.' + split_char_list[0][1] + ' on the bed with a stab wound. No murder weapon.\" He\'s saying all this without a single look into your eyes. It\'s disturbing, but he\'s probably doing it as a sign of respect. \"The murder weapon was not found. No one has been in or out of the estate so we doubt it has left the area. Let me tell you about the rooms.\n', newline = False)
         sleep(2)
-        type_effect('There\'s a bedroom. Where the murder happened. Looks out to the lawn.\" You hear a voice break. \"The door to your left leads to the servant\'s quarters down the hall. The bath is the oak gate under the mezzanine.\"',newline = False)
-        if not seenChecks['seenMaleServant']:
-            type_effect(' There\'s a servant sitting near its gate. Raggedy clothes. Quite clear tobacco stains on his teeth. Probably never settled to rich living. \"',newline = False)
-        type_effect(' There are a couple of balconies but they\'ve been locked', newline = False)
+        type_effect('There\'s a bedroom. Where the murder happened. Looks out to the lawn.\" You hear a voice break. \"The door to your left leads to the servant\'s quarters down the hall. The bath is the oak gate under the mezzanine. ',newline = False)
+        if seenChecks['seenMaleServant'] == False:
+            type_effect('\b\" There\'s a servant sitting near its gate. Raggedy clothes. Quite clear tobacco stains on his teeth. Probably never settled to rich living. \"',newline = False)
+        type_effect('There are a couple of balconies but they\'ve been locked', newline = False)
         type_effect('...', 0.7, False)
-        type_effect(' since the incident with Mr. ' + split_char_list[0][1] + '\'s wife, and there are no plans to open them. You will be chauffeured by the staff while you\'re here. You\'re free to conduct your investigation now. We thank you for your service.')
-        choice = get_choice('(type \'y\' to move to Chapter '+ chapterNum+1 +')')
-        chapterNum += 1
+        type_effect(' since the incident with Mr. ' + split_char_list[0][1] + '\'s wife, and there are no plans to open them. You will be chauffeured by the staff while you\'re here, they\'ll lock up after you. You\'re free to conduct your investigation now. We thank you for your service.')
+        choice = get_choice('(type \'y\' to move to Chapter '+ str(chapterNum+1) +')')
         clear_output()
+        type_effect("Switch rooms:\n1. Living Room[Judgement Call]\n2. Bedroom[Fishy Business]\n3. Servants' Quarter[The Reds]\n4. Lawn[A Breathe of Fresh Air]\n5. Bathroom[The Walls Have Ears]")
+        choice = get_choice('(type \'judge\' or \'fish\' or \'red\' or \'air\' or \'wall\':)')
+        if choice == 'judge':
+            type_effect('There\'s no going back. Are you sure you\'ve made a decision and have someone to accuse?')
+            choice = get_choice('(type \'y\' to confirm, \'n\' to go back:)')
+            if choice == 'n':
+                choice = get_choice('(type \'judge\' or \'fish\' or \'red\' or \'air\' or \'wall\':)')
+            else:
+                livingroom2()
+        if choice == 'judge':
+            livingroom2()
+        if choice == 'fish':
+            bedroom()
+        if choice == 'red':
+            quarter()
+        if choice == 'air':
+            lawn()
+        if choice == 'wall':
+            bathroom()
+        
+
+            
+    def lawn():
+        clear_output()
+        stat_cloud['exploration'] += 1
+        type_effect('Exploration +1')
+        if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
+            type_effect("Chapter 2: A Breathe Of Fresh Air")
+            global chapterNum
+            chapterNum += 2
+        type_effect("")
+    def quarter():
+        clear_output()
+        stat_cloud['exploration'] += 1
+        type_effect('Exploration +1')
+        if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
+            type_effect("Chapter 2: The Reds")
+            global chapterNum
+            chapterNum += 2
+    def bathroom():
+        clear_output()
+        stat_cloud['exploration'] += 1
+        type_effect('Exploration +1')
+        if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
+            type_effect("Chapter 2: The Walls Have Ears")
+            global chapterNum
+            chapterNum += 2
+    def bedroom():
+        clear_output()
+        stat_cloud['exploration'] += 1
+        type_effect('Exploration +1')
+        if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
+            type_effect("Chapter 2: Fishy Business")
+            global chapterNum
+            chapterNum += 2
+    def livingroom2():
+        clear_output
+        stat_cloud['exploration'] += 1
+        type_effect('Exploration +1')
     livingroom1()
