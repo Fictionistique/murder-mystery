@@ -74,7 +74,10 @@ def set_names():
     female_servant_lastname = random.choice(last_names)
     kid_firstname = random.choice(male_names)
     kid_lastname = female_servant_lastname
-    male_servant_firstname = random.choice(indian_male_names)
+    while True:
+        male_servant_firstname = random.choice(indian_male_names)
+        if male_servant_firstname != butler_firstname:
+            break
     male_servant_lastname = random.choice(indian_last_names)
     enby_servant_firstname = random.choice(gnc_names)
     enby_servant_lastname = random.choice(last_names)

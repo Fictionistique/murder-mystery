@@ -125,7 +125,7 @@ def game():
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
             chapterNum += 1
-            type_effect("Chapter " + chapterNum + ": A Breathe Of Fresh Air")
+            type_effect("Chapter " + str(chapterNum) + ": A Breathe Of Fresh Air")
             visitedRoom['visitedLawn'] = True
             chapterNum += 1
         type_effect("You head out to the lawn with " + split_char_list[6][0] + ". There's neatly cut grass. Except for a couple of patches around the corners. Someone did a pretty lazy job. The maid " + split_char_list[2][0] + " and her kid join you soon enough.")
@@ -162,9 +162,9 @@ def game():
         type_effect(split_char_list[6][0] + ': Where to next?')
         type_effect("Switch rooms:\n1. Living Room[Judgement Call]\n2. Bedroom\n3. Servants' Quarter\n4. Bathroom")
         if detectivePath == char_list[2]:
-            partnerThoughtsInp = split_char_list[6][0] + ': I don\'t believe what we search after this matters too much.'
+            partnerThoughtsInp = split_char_list[6][0] + ': \"I don\'t believe what we search after this matters too much.\"'
         else:
-            partnerThoughtsInp = split_char_list[6][0] + ': I suggest we check out the bath.'
+            partnerThoughtsInp = split_char_list[6][0] + ': \"I suggest we check out the bath"'
         choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'bath\':)', partnerThoughtsInp)
         if choice == 'judge':
             livingroom2()
@@ -188,10 +188,11 @@ def game():
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
             chapterNum += 1
-            type_effect("Chapter " + chapterNum + ": The Reds")
+            type_effect("Chapter " + str(chapterNum) + ": The Reds")
             visitedRoom['visitedServantsQuarters'] = True
             chapterNum += 1
-        type_effect("This path is being worked upon. Please check the chagelogs to know when the update arrives. You are being redirected to the final room.")
+        type_effect("This path is being worked upon. Please check the changelogs to know when the update arrives. You are being redirected to the final room.")
+        sleep(4)
         livingroom2()
     
     
@@ -203,14 +204,62 @@ def game():
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
             chapterNum += 1
-            type_effect("Chapter " + chapterNum + ": The Walls Have Ears")
+            type_effect("Chapter " + str(chapterNum) + ": The Walls Have Ears")
             visitedRoom['visitedBathroom'] = True
             chapterNum += 1
-            type_effect('As you and ' + split_char_list[6][0] + ' walk towards the oak door. You notice deep red stains on the lower half of the wall outside.\n' + split_char_list[6][0] + ':No signs of struggle, right? These folks haven\'t talked about any sounds they heard that night. You think what I\'m thinking?')
+            type_effect('As you and ' + split_char_list[6][0] + ' walk towards the oak door. You notice deep red stains on the lower half of the wall outside.\n' + split_char_list[6][0] + ':\"No signs of struggle, right? These folks haven\'t talked about any sounds they heard that night. You think what I\'m thinking?\"')
             choice = get_choice('Make your choice:\n1. You think it\'s blood too?\n2. Can\'t be blood, definitely not here. Let\'s just take a quick look around.\n(type \'believe\' or \'doubt\'):', partnerThoughts= split_char_list[6][0] + ': It\'s a weird place for the struggle to have happened. But we might be on to something.')
+            if choice == 'believe':
+                type_effect(split_char_list[6][0] + ': \"Definitely. Let\'s check out the inside. I\'ll take a sample on the way out.\"')
+            elif choice == 'doubt':
+                type_effect(split_char_list[6][0] + ':\" Well. Fair enough. Let\'s see what awaits us inside.\"')
+        type_effect('You enter the bath. It\'s tiled with shiny white marble. Clean as a cloud. Tall ceiling and a hanging chandelier. And a waist high mirror from where ' + split_char_list[4][0] + ' looked into your eyes. He\'s got his back towards you. His hands crushing something between them. He turns around. Empties his hands between his teeth and lower lips and walks to the exit.')
+        if choice == 'believe':
+            type_effect('\nExploration +1', newline = False)
+            type_effect(': Idiot Within Me\n', 0.7)
+            type_effect('You stand there. Embarrassed at your ignorance. It\'s hard to make a bigger fool of ourselves.')
+        type_effect(split_char_list[6][0] + ': \"Not much seems off here. Shall we move on or do you want to hang around a while?\"')
+        global resiliencePath
+        resiliencePath = char_list[4]
+        choice = get_choice('Make your choice:(type \'leave\' or \'wait\')')
+        if choice == 'leave':
+            choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'lawn\':)', partnerThoughts = split_char_list[6][0] + ': \"I suggest we wait a bit and look around.\"')
+            if choice == 'judge':
+                livingroom2()
+                return
+            if choice == 'bedroom':
+                bedroom()
+                return
+            if choice == 'quarter':
+                quarter()
+                return
+            if choice == 'lawn':
+                lawn()
+                return
+        elif choice == 'wait':
+            type_effect('You hear some hush voices coming from near the window looking out to the lawn. ' + split_char_list[4][0] + ' seems to be distracted, standing near the door and lost in his own world. You move closer to the window. It sounds like the maid\'s kid is talking to her.\n' + split_char_list[3][0] + ': \"You don\'t have to worry mom. They\'re never tracing it back to ' + split_char_list[5][0] + '. I doubt they have half a mind to even look at the place I\'ve shoved it away to.\"\n' + split_char_list[2][0] + ': \"It\'s not exactly them that I\'m worried about. It\'s you.\"')
+            resiliencePath = char_list[3]
+            global detectivePath
+            detectivePath = char_list[5]
+            choice = get_choice('Make your choice:(type \'accuse\' or \'explore\')')
+            if choice == 'accuse':
+                livingroom2()
+            elif choice == 'explore':
+                choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'lawn\':)', partnerThoughts = split_char_list[6][0] + ': \"I suggest we wait a bit and look around.\"')
+                if choice == 'judge':
+                    livingroom2()
+                    return
+                if choice == 'bedroom':
+                    bedroom()
+                    return
+                if choice == 'quarter':
+                    quarter()
+                    return
+                if choice == 'lawn':
+                    lawn()
+                    return
 
-    
-    
+
     #TBD
     def bedroom():
         global chapterNum
@@ -219,19 +268,19 @@ def game():
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):        
             chapterNum += 1
-            type_effect("Chapter " + chapterNum + ": Fishy Business")
+            type_effect("Chapter " + str(chapterNum) + ": Fishy Business")
             visitedRoom['visitedBedroom'] = True
             chapterNum += 1
-        type_effect("This path is being worked upon. Please check the chagelogs to know when the update arrives. You are being redirected to the final room.")
+        type_effect("This path is being worked upon. Please check the changelogs to know when the update arrives. You are being redirected to the final room.")
+        sleep(4)
+        livingroom2()
     
     
     def livingroom2():
         global chapterNum
-        chapterNum += 1
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
-        type_effect("Chapter " + chapterNum + ": Judgement Call")
-        visitedRoom['visitedLawn'] = True
-        chapterNum += 1
+        type_effect("Chapter " + str(chapterNum) + ": Judgement Call")
+        visitedRoom['inJudgementCall'] = True
     livingroom1()
