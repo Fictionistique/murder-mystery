@@ -154,7 +154,10 @@ def game():
         elif choice == 'doubt':
             stat_cloud['exploration'] += 1
             type_effect(split_char_list[3][0] + ': \"You got a problem with that pig!?\" That was a scowl if you\'d ever heard one.')
-            type_effect(split_char_list[6][0] + ': \"We... aren\'t exactly cops buddy.\"' + sidekickPronouns1 + ' turns to you,  \"We should head somewhere else.\"')
+            type_effect(split_char_list[6][0] + ': \"We... aren\'t exactly cops buddy.\" ' + sidekickPronouns1 + ' turns')
+            if char_list[7] == 2:
+                print("\b")
+            type_effect(' to you,  \"We should head somewhere else.\"')
         elif choice == 'accept':
             type_effect('You nod and they leave.')
         else:
@@ -165,7 +168,7 @@ def game():
             partnerThoughtsInp = split_char_list[6][0] + ': \"I don\'t believe what we search after this matters too much.\"'
         else:
             partnerThoughtsInp = split_char_list[6][0] + ': \"I suggest we check out the bath"'
-        choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'bath\':)', partnerThoughtsInp)
+        choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'quarter\' or \'bath\':)', partnerThoughtsInp)
         if choice == 'judge':
             livingroom2()
             return
@@ -202,6 +205,7 @@ def game():
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
+        choice = ""
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
             chapterNum += 1
             type_effect("Chapter " + str(chapterNum) + ": The Walls Have Ears")
@@ -223,7 +227,7 @@ def game():
         resiliencePath = char_list[4]
         choice = get_choice('Make your choice:(type \'leave\' or \'wait\')')
         if choice == 'leave':
-            choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'lawn\':)', partnerThoughts = split_char_list[6][0] + ': \"I suggest we wait a bit and look around.\"')
+            choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'quarter\' or \'lawn\':)', partnerThoughts = split_char_list[6][0] + ': \"I suggest we wait a bit and look around.\"')
             if choice == 'judge':
                 livingroom2()
                 return
@@ -245,7 +249,7 @@ def game():
             if choice == 'accuse':
                 livingroom2()
             elif choice == 'explore':
-                choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'lawn\':)', partnerThoughts = split_char_list[6][0] + ': \"I suggest we wait a bit and look around.\"')
+                choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'quarter\' or \'lawn\':)', partnerThoughts = split_char_list[6][0] + ': \"I suggest we wait a bit and look around.\"')
                 if choice == 'judge':
                     livingroom2()
                     return
