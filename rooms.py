@@ -120,12 +120,12 @@ def game():
             
     def lawn():
         global chapterNum
-        chapterNum += 1
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
-            type_effect("Chapter 2: A Breathe Of Fresh Air")
+            chapterNum += 1
+            type_effect("Chapter " + chapterNum + ": A Breathe Of Fresh Air")
             visitedRoom['visitedLawn'] = True
             chapterNum += 1
         type_effect("You head out to the lawn with " + split_char_list[6][0] + ". There's neatly cut grass. Except for a couple of patches around the corners. Someone did a pretty lazy job. The maid " + split_char_list[2][0] + " and her kid join you soon enough.")
@@ -160,55 +160,78 @@ def game():
         else:
             type_effect('They leave.')
         type_effect(split_char_list[6][0] + ': Where to next?')
-        type_effect("Switch rooms:\n1. Living Room[Judgement Call]\n2. Bedroom\n3. Servants' Quarter\n4. Lawn\n5. Bathroom")
+        type_effect("Switch rooms:\n1. Living Room[Judgement Call]\n2. Bedroom\n3. Servants' Quarter\n4. Bathroom")
         if detectivePath == char_list[2]:
             partnerThoughtsInp = split_char_list[6][0] + ': I don\'t believe what we search after this matters too much.'
         else:
-            partnerThoughtsInp = split_char_list[6][0] + ': Let\'s see what lies ahead.'
-        choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'lawn\' or \'bathroom\':)', partnerThoughtsInp)
+            partnerThoughtsInp = split_char_list[6][0] + ': I suggest we check out the bath.'
+        choice = get_choice('Make your choice: (type \'judge\' or \'bedroom\' or \'qaurter\' or \'bath\':)', partnerThoughtsInp)
         if choice == 'judge':
             livingroom2()
             return
-        if choice == 'fish':
+        if choice == 'bedroom':
             bedroom()
             return
-        if choice == 'red':
+        if choice == 'quarter':
             quarter()
             return
-        if choice == 'air':
-            lawn()
-            return
-        if choice == 'wall':
+        if choice == 'bath':
             bathroom()
             return
 
-
+    
+    #TBD
     def quarter():
+        global chapterNum
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
-            type_effect("Chapter 2: The Reds")
-            global chapterNum
-            chapterNum += 2
+            chapterNum += 1
+            type_effect("Chapter " + chapterNum + ": The Reds")
+            visitedRoom['visitedServantsQuarters'] = True
+            chapterNum += 1
+        type_effect("This path is being worked upon. Please check the chagelogs to know when the update arrives. You are being redirected to the final room.")
+        livingroom2()
+    
+    
     def bathroom():
+        global chapterNum
+        
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
         if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
-            type_effect("Chapter 2: The Walls Have Ears")
-            global chapterNum
-            chapterNum += 2
+            chapterNum += 1
+            type_effect("Chapter " + chapterNum + ": The Walls Have Ears")
+            visitedRoom['visitedBathroom'] = True
+            chapterNum += 1
+            type_effect('As you and ' + split_char_list[6][0] + ' walk towards the oak door. You notice deep red stains on the lower half of the wall outside.\n' + split_char_list[6][0] + ':No signs of struggle, right? These folks haven\'t talked about any sounds they heard that night. You think what I\'m thinking?')
+            choice = get_choice('Make your choice:\n1. You think it\'s blood too?\n2. Can\'t be blood, definitely not here. Let\'s just take a quick look around.\n(type \'believe\' or \'doubt\'):', partnerThoughts= split_char_list[6][0] + ': It\'s a weird place for the struggle to have happened. But we might be on to something.')
+
+    
+    
+    #TBD
     def bedroom():
+        global chapterNum
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
-        if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):
-            type_effect("Chapter 2: Fishy Business")
-            global chapterNum
-            chapterNum += 2
+        if not (visitedRoom['visitedBathroom'] == True or visitedRoom['visitedBedroom'] == True or visitedRoom['visitedLawn'] == True or visitedRoom['visitedServantsQuarters'] == True):        
+            chapterNum += 1
+            type_effect("Chapter " + chapterNum + ": Fishy Business")
+            visitedRoom['visitedBedroom'] = True
+            chapterNum += 1
+        type_effect("This path is being worked upon. Please check the chagelogs to know when the update arrives. You are being redirected to the final room.")
+    
+    
     def livingroom2():
+        global chapterNum
+        chapterNum += 1
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
+        type_effect("Chapter " + chapterNum + ": Judgement Call")
+        visitedRoom['visitedLawn'] = True
+        chapterNum += 1
     livingroom1()
