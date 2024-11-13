@@ -1,6 +1,7 @@
 from time import sleep
 from IPython.display import clear_output # type: ignore
 import characters_randomizer
+import random
 
 stat_cloud = {
     'risk': 0,
@@ -9,7 +10,7 @@ stat_cloud = {
     'detective': 0,
     'lucky': 0
 }
-#delay = 0.039
+
 def type_effect(text, delay=0.039, newline=True):
     for char in text:
         print(char, end='', flush=True)

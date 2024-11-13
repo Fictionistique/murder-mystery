@@ -5,7 +5,8 @@ seenChecks = {'seenRichGuy' : False, 'seenButler' : False, 'seenFemaleServant' :
 chapterNum = 0
 detectivePath = "Unknown"
 resiliencePath = "Unknown"
-murderWeapon = []
+murderWeapon = "Not Found"
+yName = ""
 
 # List of characters
 # 0 - RichGuy
@@ -18,6 +19,10 @@ murderWeapon = []
 # 7 - SidekickGender
 
 char_list = characters_randomizer.set_names()
+
+clues = {}
+for i in char_list[:7]:
+    clues[i] = []
 
 if (char_list[7] == 0):
     sidekickPronouns1 = 'HE'
@@ -43,8 +48,10 @@ def game():
         chapterNum = 0
         chapterNum += 1
         type_effect('Chapter ' + str(chapterNum) + ': Welcome to the life of Private Detective ', newline = False)
+        global yName
         yName = get_choice('', partnerThoughts = f"{split_char_list[6][0]}: \"I\'d say John sounds good enough?\"")
         
+        #Add more clues
         type_effect('The day was cold as it could be when you reached ' + char_list[0] + '\'s estate. A layer of fog covered the ground. His property looked just like you expected. Gothic architecture, well maintained, and', newline = False)
         type_effect('...', 0.7, False)
         type_effect(' lifeless.\nLuckily, you\'re here with your new apprentice, ' + char_list[6] + '. You assured ' + sidekickPronouns2.lower() + ' that it won\'t take long to be done with this.\n\n' + yName + ': \"The smell\'s the worst part, and they\'ve taken care of the body so we should be fine\"\n'+ sidekickPronouns1.capitalize() +' snorts', newline = False)
@@ -55,7 +62,11 @@ def game():
         type_effect('Butler: \"Good evening, it\'s unfortunate we had to call you under these circumstances. But it is of utmost important for the estate to ensure none of the staff was involved in this incident. Please, come in."')
         type_effect('You and ' + split_char_list[6][0] + ' followed the Butler into the living room. The room was dimly lit, the only light coming from the fireplace. There was a grand staircase, a chandelier, and a large portrait of ' + split_char_list[0][1] + ' hanging above the fireplace. It was a single floor with a very high ceiling. The stairs leading to an overhanging walkway and some balconies. Everyone who worked in the property was there at the edge of the staircase. A common expression of anxiety on everyone\'s faces, except a kid, who looked almost annoyed to be there.\n')
         type_effect('Butler: \"As you\'re aware, with the death -\" Weird emphasis on the word \'death\' \"- of Mr. ' + split_char_list[0][1] +', the property goes to the bank, with no one to heir it. In interest of those who have served Mr. ' + split_char_list[0][1] + ' throughout thick and thin, we require you to conduct your examination of the crime scene -\" Pause before saying crime scene \"- before the state officials desecrate the place.\"')
+        clues[char_list[1]].append('Weird emphasis on the word \'death\'')
+        clues[char_list[1]].append('Pause before saying \'crime scene\'')
         type_effect(split_char_list[6][0] + ': \"I did some background checks on these people. Most of them seem uninteresting, however the servants '+ char_list[4] + ' and ' + char_list[5] + ' have barely any legal records. Probably worth looking into.\"')
+        clues[char_list[4]].append['No legal records']
+        clues[char_list[5]].append['No legal records']
         type_effect('Make a choice: Question the servants or move on?',newline = False)
         choice = get_choice('(type \'servants\' or \'move on\'): ')
         print(choice)
@@ -133,6 +144,7 @@ def game():
         type_effect(split_char_list[2][0] + ": \"Mr. " + split_char_list[0][1] + " ", newline = False)
         if visitedRoom['visitedBedroom'] == True:
             type_effect('never really ', newline = False)
+            clues[char_list[2]].append('Lied about ' + split_char_list[0][1] + '\'s liking for the lawn')
             global detectivePath
             detectivePath = char_list[2]
         type_effect("had a thing for this place. We had to take care of it as an ode to Mrs. " + split_char_list[0][1] + ". " + split_char_list[3][0] + ", this young man, and I keep things going around here.\"")
@@ -147,6 +159,8 @@ def game():
                     type_effect('You look around. There\'s nothing significant wrong with the place. It\'s cold. You decide to head back inside.')
                 else:
                     type_effect('You look around. The wind howls in your ears. There\'s something shining in a patch of glass. A gleam of red dripping down. You\'ve found the knife used to kill ' + char_list[0])
+                    global murderWeapon
+                    murderWeapon = 'lawn'
                     global resiliencePath
                     resiliencePath = char_list[2]
         elif choice == 'doubt':
@@ -192,8 +206,8 @@ def game():
             type_effect("Chapter " + str(chapterNum) + ": The Reds")
             visitedRoom['visitedServantsQuarters'] = True
             chapterNum += 1
-        type_effect("This path is being worked upon. Please check the changelogs to know when the update arrives. You are being redirected to the final room.")
-        sleep(4)
+        type_effect("This path is being worked upon. Please check the changelogs to know when the update arrives. You are being redirected to the final room. " + split_char_list[5][0] + " is a revolutionary and has radical ideas about social heirarchy. But you don\'t find anything incriminating against them.\n")
+        sleep(6)
         livingroom2()
     
     
@@ -248,7 +262,7 @@ def game():
                 global detectivePath
                 detectivePath = char_list[5]
             
-            choice = get_choice('Make your choice:(type \'accuse\' or \'explore\')')
+            choice = get_choice('Make your choice:(type \'accuse\' or \'explore\')', partnerThoughts = split_char_list[6][0] + ': I suggest we take a look at the servants\' quarters first. Might tell us more about the involvement of '+ split_char_list[5][0] + '.')
             if choice == 'accuse':
                 livingroom2()
             elif choice == 'explore':
@@ -287,10 +301,76 @@ def game():
         global chapterNum
         global resiliencePath
         global detectivePath
+        global yName
         clear_output()
         stat_cloud['exploration'] += 1
         type_effect('Exploration +1')
         type_effect("Chapter " + str(chapterNum) + ": Judgement Call")
         visitedRoom['inJudgementCall'] = True
+        type_effect('Everyone gathers around the stairway. Looking intently at you. The same anxiety in everyone\'s eyes. Except for ' + resiliencePath.split()[0] + ' who seems weirdly relaxed.\nButler : \"Well ' + yName + ', have you reached a conclusion?\"')
+        type_effect(yName + ': Yes, we\'ve looked over everything we needed to know. ' + char_list[0] + ' was murdered by ', newline = False)
+        choice = get_choice('Make your choice:(type \'butler\' or \'maid\' or \'kid\' or ' + split_char_list[4][0] + ' or ' + split_char_list[5][0] + ')')
+        if choice == 'butler':
+            choice = char_list[1]
+        elif choice == 'maid':
+            choice = char_list[2]
+        elif choice == 'kid':
+            choice = char_list[3]
+        elif choice == split_char_list[4][0]:
+            choice = char_list[4]
+        elif choice == split_char_list[5][0]:
+            choice = char_list[5] 
+        
+        type_effect('You hear gasps from the group. The butler\'s expression remains unchanged.\n\nButler: \"And what exactly makes you believe that?\"')
+        type_effect('Your clues were: ')
+        for i in clues[choice]:
+            type_effect('- ' + i + '\n')
+        kickOut = ''
+        if clues[choice] == []:
+            type_effect('Nothing',0.5)
+        choice1 = get_choice('Make your choice:(type \'mention clues\' or \'gut feeling\'):')
+        if choice1 == 'mention clues' and clues[choice] == []:
+            type_effect('Risk +3')
+            stat_cloud['risk'] += 3
+            type_effect('Butler:\"I couldn\'t have had been more wrong in inviting you here. Please leave and let us be.\"')
+            failState()
+        else:
+            diceRoll = random.randint(1,200)
+            if diceRoll == 20:
+                lucky = True
+            if choice == detectivePath:
+                type_effect('Risk +1')
+                stat_cloud['risk'] += 1
+                type_effect(choice + ': \"You will regret this ' + yName + '!\"\nFor the first time, you see a change in the Butler\'s expressions, as they turn to disappointment.\nButler:\"I apologise in their behalf. Thank you for your service ' + yName + ', we are grateful to you. The authorities will deal with this', newline = False)
+                type_effect('...', 0.7, False)
+                type_effect(' letdown of a person.')
+                type_effect('You and ' + split_char_list[6][0] + ' walk out the mansion.\n' + yName + ': \"Told you, in and out, no time at all.\"\n' + sidekickPronouns1.capitalize() + 'chuckles', newline = False)
+                if char_list[7] == 2:
+                    print('\b')
+                type_effect('\nThe End', 0.35)
+                return
+            elif choice == resiliencePath:
+                type_effect('Risk +2')
+                stat_cloud['risk'] += 2
+                type_effect(choice.split()[0] + ': \"No! It can\'t be! You\'ve messed up somewhere. I would never do something like that to Mr.' + split_char_list[0][1] + '! Please, you have to listen to me.\"\nButler:\"There isn\'t nothing to listen to.\" There\'s a deep sadness on the Butler\'s face. \"Thank you for your service ' + yName + '. It\'s better if you leave now.\"')
+                type_effect('...', 0.7, False)
+                type_effect(' Exploration -1: I\'ve won, but at what cost?')
+                type_effect('You walk out into the sunset. It\'s all done. But that dots still feel disconnected. Something feels off, you just can\'t tell what it is.')
+                type_effect('The End', 0.35)
+                return
+            elif lucky:
+                stat_cloud['lucky'] += 1
+                type_effect('You\'ve unlocked a rare ending. Unfortunately, it is currently in progress. Please check the changelogs to know when the update arrives. You are being redirected to a special end scene.')
+                sleep(4)
+                specialEnd()
+                return
 
+    def specialEnd():
+        type_effect('As you set your step outside. ' + detectivePath.split()[0] + ' stops you. Everyone else is occupied with themselves, with no idea about what ' + detectivePath.split()[0] + ' is saying.\n' + detectivePath.split()[0] + ':\"Man, I can\'t believe you couldn\'t tell it was me.\" A laughter echoes in your ears as the curtains fall.')
+        type_effect('The End', 0.35)
+        return
+    def failState():
+        type_effect('Unfortunately, you have failed. This ending is currently in progress. Please check the changelogs to know when the update arrives. Thank you for playing!')
+        sleep(2)
+        return()
     livingroom1()
